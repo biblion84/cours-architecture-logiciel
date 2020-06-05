@@ -10,9 +10,10 @@ import (
 )
 
 func (app *Application) GetProducts(w http.ResponseWriter, r *http.Request) {
-	products := app.db.Find(&Products{})
-	parsedProduct, _ := json.Marshal(products)
-	w.Write(parsedProduct)
+	var products []Products
+	app.db.Find(&products)
+	parsedProduct, _ := json.Marshal(&products)
+	w.Write([]byte(parsedProduct))
 }
 
 func (app *Application) GetProductsById(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +24,7 @@ func (app *Application) GetProductsById(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	products := app.db.First(&Products{}, Id)
-	parsedProduct, _ := json.Marshal(products)
+	parsedProduct, _ := json.Marshal(&products)
 	w.Write(parsedProduct)
 }
 
@@ -48,6 +49,7 @@ func (app *Application) PutProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app.db.Update(&product)
+	//app.db.Omit("ID", "CreatedAt", "UpdatedAt", "DeletedAt").Update(&product)
 	w.Write([]byte(fmt.Sprintf("Updated %d", product.ID)))
 }
 
