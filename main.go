@@ -1,18 +1,34 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
 	db       *gorm.DB
+}
+
+var Db *gorm.DB
+
+const connectionString = "Your connection string"
+
+func ConnectDatabase() error {
+	var err error
+	Db, err = gorm.Open("postgres", connectionString)
+	if err != nil {
+		return fmt.Errorf("error in connectDatabase(): %v", err)
+	}
+	Db.AutoMigrate(&Products{})
+	return err
 }
 
 func main() {

@@ -3,11 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
-
-	"net/http"
 )
 
 func (app *Application) GetProducts(w http.ResponseWriter, r *http.Request) {
